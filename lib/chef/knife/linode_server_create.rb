@@ -113,10 +113,10 @@ class Chef
         :proc => Proc.new { |d| Chef::Config[:knife][:distro] = d },
         :default => "chef-full"
 
-      option :template_file,
-        :long => "--template-file TEMPLATE",
+      option :bootstrap_template,
+        :long => "--bootstrap-template TEMPLATE",
         :description => "Full path to location of template to use",
-        :proc => Proc.new { |t| Chef::Config[:knife][:template_file] = t },
+        :proc => Proc.new { |t| Chef::Config[:knife][:bootstrap_template,] = t },
         :default => false
 
       option :run_list,
@@ -125,6 +125,11 @@ class Chef
         :description => "Comma separated list of roles/recipes to apply",
         :proc => lambda { |o| o.split(/[\s,]+/) },
         :default => []
+
+      option :environment,
+        :short => "-E ENVIRONMENT",
+        :long => "--environment ENVIRONMENT",
+        :description => "The name of node chef environment."
 
       option :json_attributes,
         :short => "-j JSON",
@@ -274,7 +279,7 @@ class Chef
         bootstrap.config[:first_boot_attributes] = locate_config_value(:json_attributes) || {}
         bootstrap.config[:distro] = locate_config_value(:distro)
         bootstrap.config[:use_sudo] = true unless config[:ssh_user] == 'root'
-        bootstrap.config[:template_file] = locate_config_value(:template_file)
+        bootstrap.config[:bootstrap_template] = locate_config_value(:bootstrap_template)
         bootstrap.config[:environment] = config[:environment]
         bootstrap.config[:host_key_verify] = config[:host_key_verify]
         bootstrap.config[:secret] = locate_config_value(:secret)
